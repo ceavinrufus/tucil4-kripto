@@ -5,9 +5,24 @@ const cors = require('cors')
 const app = express()
 app.use(cors())
 
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'akademik',
+    port: '3308'
+})
 
 app.get('/', (re, res)=> {
     return res.json("From Backend Side")
+})
+
+app.get('/test', (req, res)=> {
+    const sql = "SELECT * FROM StudentCourses";
+    db.query(sql, (err, data)=> {
+        if (err) return res.json(err);
+        return res.json(data);
+    })
 })
 
 app.listen(8081, () => {
