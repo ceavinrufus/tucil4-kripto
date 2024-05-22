@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { data as d } from "../../db/dummy";
+import { useState, useEffect } from "react";
+// import { data as d } from "../../db/dummy";
 
 function Database() {
-  const [data, setData] = useState(d);
+  const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8081/test")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data))
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8081/get")
+      .then((res) => res.json())
+      .then((data) => setData(data))
+      .catch((err) => console.error(err));
+  }, []);
 
   const columns = [
     "NIM",
