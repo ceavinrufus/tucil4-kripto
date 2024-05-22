@@ -1,5 +1,6 @@
 import RSA from "../utils/RSA";
-import React, {useState} from "react";
+import React, { useState } from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
 const Home = () => {
     const [publicKey, setPublicKey] = useState();
@@ -7,47 +8,17 @@ const Home = () => {
     const [formData, setFormData] = useState({
         NIM: '',
         Nama: '',
-        KodeMK1: '',
-        NamaMatkul1: '',
-        Nilai1: '',
-        SKS1: '',
-        KodeMK2: '',
-        NamaMatkul2: '',
-        Nilai2: '',
-        SKS2: '',
-        KodeMK3: '',
-        NamaMatkul3: '',
-        Nilai3: '',
-        SKS3: '',
-        KodeMK4: '',
-        NamaMatkul4: '',
-        Nilai4: '',
-        SKS4: '',
-        KodeMK5: '',
-        NamaMatkul5: '',
-        Nilai5: '',
-        SKS5: '',
-        KodeMK6: '',
-        NamaMatkul6: '',
-        Nilai6: '',
-        SKS6: '',
-        KodeMK7: '',
-        NamaMatkul7: '',
-        Nilai7: '',
-        SKS7: '',
-        KodeMK8: '',
-        NamaMatkul8: '',
-        Nilai8: '',
-        SKS8: '',
-        KodeMK9: '',
-        NamaMatkul9: '',
-        Nilai9: '',
-        SKS9: '',
-        KodeMK10: '',
-        NamaMatkul10: '',
-        Nilai10: '',
-        SKS10: '',
-        IPK: ''
+        IPK: '',
+        KodeMK1: '', NamaMatkul1: '', Nilai1: '', SKS1: '',
+        KodeMK2: '', NamaMatkul2: '', Nilai2: '', SKS2: '',
+        KodeMK3: '', NamaMatkul3: '', Nilai3: '', SKS3: '',
+        KodeMK4: '', NamaMatkul4: '', Nilai4: '', SKS4: '',
+        KodeMK5: '', NamaMatkul5: '', Nilai5: '', SKS5: '',
+        KodeMK6: '', NamaMatkul6: '', Nilai6: '', SKS6: '',
+        KodeMK7: '', NamaMatkul7: '', Nilai7: '', SKS7: '',
+        KodeMK8: '', NamaMatkul8: '', Nilai8: '', SKS8: '',
+        KodeMK9: '', NamaMatkul9: '', Nilai9: '', SKS9: '',
+        KodeMK10: '', NamaMatkul10: '', Nilai10: '', SKS10: ''
     });
 
     const [error, setError] = useState('');
@@ -61,6 +32,7 @@ const Home = () => {
         setPublicKey(pubKey);
         setPrivateKey(priKey);
     };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -74,7 +46,6 @@ const Home = () => {
         for (let key in formData) {
             if (formData[key].trim() === '') {
                 setError('All fields are required.');
-                setSuccess('s');
                 return;
             }
         }
@@ -86,279 +57,139 @@ const Home = () => {
             },
             body: JSON.stringify(formData)
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data.success) {
-                setSuccess('Data inserted successfully!');
-                setError('');
-            } else {
-                setError('Insert failed. ' + data.message);
-            }
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-            setError(error.message);
-        });
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    setSuccess('Data inserted successfully!');
+                    setError('');
+                } else {
+                    setError('Insert failed. ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                setError(error.message);
+            });
     };
 
-
     return (
-        <div>
-            <h1>Home</h1>
-            <p>Welcome to the home page!</p>
-            <button
-                disabled={publicKey && privateKey}
-                onClick={initializeRSA}
-            >
-                {publicKey && privateKey ? "Key Already Generated" : "Generate Key"}
-            </button>
-            <div>
-                {publicKey && privateKey && (
-                    <div>
-                        <div>
-                            <p>Your Public Key: </p>
-                            <p>e: {publicKey.e} </p>
-                            <p>n: {publicKey.n}</p>
-                        </div>
-                        <div>
-                            <p>Your Private Key: </p>
-                            <p>d: {privateKey.d}</p>
-                            <p>n: {privateKey.n}</p>
-                        </div>
+        <div className="homepage">
+            <Container>
+                <Row className="header-box d-flex align-items-center">
+                    <Col xs={12}>
+                        <h1 style={{paddingTop: "20px", fontWeight: "bold"}}>Tugas 4 Mata Kuliah II403 Kriptografi dan Koding</h1>
+                    </Col>
+                    <div className="separator">
+
                     </div>
-                )}
-            </div>
-            <form onSubmit={handleSubmit}>
-                {error && <div style={{ color: 'red' }}>{error}</div>}
-                {success && <div style={{ color: 'green' }}>{success}</div>}
-                <label>
-                    NIM:
-                    <textarea name="NIM" value={formData.NIM} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="Nama" value={formData.Nama} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 1:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK1" value={formData.KodeMK1} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul1" value={formData.NamaMatkul1} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai1" value={formData.Nilai1} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS1:
-                    <textarea name="SKS1" value={formData.SKS1} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 2:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK2" value={formData.KodeMK2} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul2" value={formData.NamaMatkul2} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai2" value={formData.Nilai2} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS2" value={formData.SKS2} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 3:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK3" value={formData.KodeMK3} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul3" value={formData.NamaMatkul3} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai3" value={formData.Nilai3} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS3" value={formData.SKS3} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 4:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK4" value={formData.KodeMK4} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul4" value={formData.NamaMatkul4} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai4" value={formData.Nilai4} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS4" value={formData.SKS4} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 5:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK5" value={formData.KodeMK5} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul5" value={formData.NamaMatkul5} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai5" value={formData.Nilai5} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS5" value={formData.SKS5} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 6:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK6" value={formData.KodeMK6} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul6" value={formData.NamaMatkul6} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai6" value={formData.Nilai6} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS6" value={formData.SKS6} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 7:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK7" value={formData.KodeMK7} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul7" value={formData.NamaMatkul7} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai7" value={formData.Nilai7} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS7" value={formData.SKS7} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 8:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK8" value={formData.KodeMK8} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul8" value={formData.NamaMatkul8} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai8" value={formData.Nilai8} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS8" value={formData.SKS8} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 2:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK9" value={formData.KodeMK9} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul9" value={formData.NamaMatkul9} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai9" value={formData.Nilai9} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS9" value={formData.SKS9} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p>Mata Kuliah 10:</p>
-                <label>
-                    Kode:
-                    <textarea name="KodeMK10" value={formData.KodeMK10} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nama:
-                    <textarea name="NamaMatkul10" value={formData.NamaMatkul10} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    Nilai:
-                    <textarea name="Nilai10" value={formData.Nilai10} onChange={handleInputChange} />
-                </label>
-                <br />
-                <label>
-                    SKS:
-                    <textarea name="SKS10" value={formData.SKS10} onChange={handleInputChange} />
-                </label>
-                <br />
-                <p></p>
-                <label>
-                    IPK:
-                    <textarea name="IPK" value={formData.IPK} onChange={handleInputChange} />
-                </label>
-                <br />
-                <button type="submit">Submit</button>
-            </form>
+                    <Col xs={4}>
+                        <h4>Josua Adriel Sinabutar</h4>
+                        <h5>18221065</h5>
+                    </Col>
+                    <Col xs={4}>
+                        <h4>Ceavin Rufus</h4>
+                        <h5>18221065</h5>
+                    </Col>
+                    <Col xs={4}>
+                        <h4>Tara</h4>
+                        <h5>18221065</h5>
+                    </Col>
+                </Row>
+                <Row className="my-4">
+                <h2>Data Akademik Mahasiswa</h2>
+                    <Col>
+                        <button
+                            disabled={publicKey && privateKey}
+                            onClick={initializeRSA}
+                            className="generate-key-btn"
+                        >
+                            {publicKey && privateKey ? "Key Already Generated!" : "Generate Key RSA!"}
+                        </button>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        {publicKey && privateKey && (
+                            <div className="keys">
+                                <div className="public-key">
+                                    <p>Your Public Key: </p>
+                                    <p>e: {publicKey.e}</p>
+                                    <p>n: {publicKey.n}</p>
+                                </div>
+                                <div className="private-key">
+                                    <p>Your Private Key: </p>
+                                    <p>d: {privateKey.d}</p>
+                                    <p>n: {privateKey.n}</p>
+                                </div>
+                            </div>
+                        )}
+                    </Col>
+                </Row>
+                <form onSubmit={handleSubmit}>
+                    {error && <div style={{ color: 'red' }}>{error}</div>}
+                    {success && <div style={{ color: 'green' }}>{success}</div>}
+                    <Row className="form-row">
+                        <Col md={6}>
+                            <label>NIM Mahasiswa:</label>
+                            <textarea name="NIM" value={formData.NIM} onChange={handleInputChange} />
+                        </Col>
+                        <Col md={6}>
+                            <label>Nama Mahasiswa:</label>
+                            <textarea name="Nama" value={formData.Nama} onChange={handleInputChange} />
+                        </Col>
+                    </Row>
+                    <Row className="form-row">
+                        <Col md={6}>
+                            <label>IPK:</label>
+                            <textarea name="IPK" value={formData.IPK} onChange={handleInputChange} />
+                        </Col>
+                    </Row>
+                    {[...Array(10)].map((_, index) => (
+                        <div key={index} className="mata-kuliah-section">
+                            <h4>Mata Kuliah {index + 1}</h4>
+                            <Row className="form-row">
+                                <Col md={3}>
+                                    <label>Kode:</label>
+                                    <textarea
+                                        name={`KodeMK${index + 1}`}
+                                        value={formData[`KodeMK${index + 1}`]}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                                <Col md={3}>
+                                    <label>Nama:</label>
+                                    <textarea
+                                        name={`NamaMatkul${index + 1}`}
+                                        value={formData[`NamaMatkul${index + 1}`]}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                                <Col md={3}>
+                                    <label>Nilai:</label>
+                                    <textarea
+                                        name={`Nilai${index + 1}`}
+                                        value={formData[`Nilai${index + 1}`]}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                                <Col md={3}>
+                                    <label>SKS:</label>
+                                    <textarea
+                                        name={`SKS${index + 1}`}
+                                        value={formData[`SKS${index + 1}`]}
+                                        onChange={handleInputChange}
+                                    />
+                                </Col>
+                            </Row>
+                        </div>
+                    ))}
+                    <Row className="form-row">
+                        <Col>
+                            <button type="submit" className="submit-btn">Submit</button>
+                        </Col>
+                    </Row>
+                </form>
+            </Container>
         </div>
     );
 };
