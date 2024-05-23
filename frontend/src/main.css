@@ -19,9 +19,28 @@ body::-webkit-scrollbar {
   --navbar-color-text: #000000;
 }
 
-.homepage {
-  padding: 20px;
+.homepage{
+  display: flex;
+  align-items: center;
+  padding-left: 50px;
+  padding-right: 50px;
+  background: #c6ffdd; 
+  background: -webkit-linear-gradient(to left, #f7797d, #fbd786, #c6ffdd); 
   background: linear-gradient(to left, #f7797d, #fbd786, #c6ffdd);
+  padding-top: 100px;
+  min-height: 100vh;
+}
+
+.custom-navbar {
+  position: fixed!important;
+  height: 70px; 
+  width: 100%;
+  background: linear-gradient(to left, #f7797d, #fbd786, #c6ffdd);
+  box-shadow: 0 2px 5px #aaa;
+}
+
+.custom-navbar .navbar-nav {
+  margin-left: auto; 
 }
 
 .header-box {
@@ -36,10 +55,6 @@ body::-webkit-scrollbar {
   text-align: center;
 }
 
-.header-box h5 {
-  padding-left: 150px;
-  padding-bottom: 40px;
-}
 .generate-key-btn, .submit-btn {
   background-color: #eb8055;
   color: #fff;
@@ -76,7 +91,7 @@ body::-webkit-scrollbar {
   margin-bottom: 5px;
 }
 
-.form-row textarea {
+.form-row input {
   width: 100%;
   padding: 10px;
   font-size: 16px;

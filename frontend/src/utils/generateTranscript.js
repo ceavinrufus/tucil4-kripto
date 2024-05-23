@@ -143,7 +143,7 @@ export default function generateTranscript(data) {
 
   data.matkul.forEach((row, index) => {
     const wrappedText = [
-      (index + 1).toString(),
+      [(index + 1).toString()],
       ...row.map((text, index) =>
         doc.splitTextToSize(text, columnWidths[index + 1] - 4)
       ),

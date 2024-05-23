@@ -1,13 +1,19 @@
-import { useState, useEffect } from "react";
-// import { data as d } from "../../db/dummy";
+import React, { useState, useEffect } from "react";
+import { Tabs, Tab, Table, Container, Button } from "react-bootstrap";
+import { jsPDF } from "jspdf";
+import "bootstrap/dist/css/bootstrap.min.css";
+import generateTranscript from "../utils/generateTranscript";
 
 function Database() {
   const [data, setData] = useState([]);
+  const [key, setKey] = useState("plain");
 
   useEffect(() => {
     fetch("http://localhost:8081/get")
       .then((res) => res.json())
-      .then((data) => setData(data))
+      .then((data) => {
+        setData(data);
+      })
       .catch((err) => console.error(err));
   }, []);
 
@@ -56,39 +62,103 @@ function Database() {
     "SKS10",
     "IPK",
     "DigitalSignature",
+    "Download PDF",
   ];
 
-  const cellStyle = {
-    padding: "10px", // Adjust the padding as needed
-    border: "1px solid #ddd", // Optional: add borders to cells for better visualization
+  const downloadPDF = (rowData) => {
+    // Process data
+    const data = {
+      identity: {
+        name: rowData["Nama"],
+        nim: rowData["NIM"],
+      },
+      matkul: [],
+      kaprodi: {
+        name: "I Gusti Bagus Baskara", // Assuming the kaprodi name is constant
+        sign: "BFc65FFeCD2108CE340B", // Assuming the signature is constant
+      },
+    };
+
+    // Extracting course data
+    for (let i = 1; i <= 10; i++) {
+      const kodeMK = rowData[`KodeMK${i}`];
+      const namaMatkul = rowData[`NamaMatkul${i}`];
+      const nilai = rowData[`Nilai${i}`];
+      const sks = Number(rowData[`SKS${i}`]);
+
+      // If any of the course data is missing, break the loop
+      if (!kodeMK || !namaMatkul || !nilai || !sks) {
+        break;
+      }
+      data.matkul.push([kodeMK, namaMatkul, sks, nilai]);
+    }
+    console.log(data);
+
+    generateTranscript(data);
   };
 
-  return (
-    <div>
-      <h1>Database Akademik</h1>
-      <table>
-        <thead>
-          <tr>
-            {columns.map((col, index) => (
-              <th key={index} style={cellStyle}>
-                {col}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data &&
-            data.map((item, index) => (
+  const renderTable = (type) => {
+    let displayData = data;
+    if (type === "encrypted" || type === "encrypted-signed") {
+      // You can add encryption logic here
+      displayData = data.map((item) => ({
+        ...item,
+        // Apply encryption to required fields here
+      }));
+    }
+
+    return (
+      <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              {columns.map((header) => (
+                <th key={header}>{header}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {displayData.map((row, index) => (
               <tr key={index}>
                 {columns.map((col, colIndex) => (
-                  <td key={colIndex} style={cellStyle}>
-                    {item[col]}
+                  <td
+                    key={col}
+                    style={{ padding: "10px", border: "1px solid #ddd" }}
+                  >
+                    {colIndex === columns.length - 1 ? (
+                      <Button onClick={() => downloadPDF(row)}>Download</Button>
+                    ) : (
+                      row[col]
+                    )}
                   </td>
                 ))}
               </tr>
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </Table>
+      </div>
+    );
+  };
+
+  return (
+    <div className="homepage">
+      <Container>
+        <h1>Database Akademik</h1>
+        <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
+          <Tab eventKey="plain" title="Tabel Plain">
+            {renderTable("plain")}
+          </Tab>
+          <Tab eventKey="encrypted" title="Tabel Terenkripsi">
+            {renderTable("encrypted")}
+          </Tab>
+          <Tab
+            eventKey="encrypted-signed"
+            title="Tabel Terenkripsi dan Tertandatangan"
+          >
+            {renderTable("encrypted-signed")}
+          </Tab>
+        </Tabs>
+      </Container>
     </div>
   );
 }
