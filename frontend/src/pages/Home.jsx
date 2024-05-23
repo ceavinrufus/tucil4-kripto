@@ -6,6 +6,7 @@ import ModifiedRC4 from "../utils/ModifiedRC4"
 const Home = () => {
     const [publicKey, setPublicKey] = useState();
     const [privateKey, setPrivateKey] = useState();
+    const [encryptionKey, setEncryptionKey] = useState('');
     const [formData, setFormData] = useState({
         NIM: '',
         Nama: '',
@@ -42,6 +43,10 @@ const Home = () => {
         });
     };
 
+    const handleKeyChange = (e) => {
+        setEncryptionKey(e.target.value);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         for (let key in formData) {
@@ -50,9 +55,12 @@ const Home = () => {
                 return;
             }
         }
+        if (encryptionKey.trim() === '') {
+            setError('Encryption key is required.');
+            return;
+        }
         setError('');
 
-        const encryptionKey = 'halohalo'; // nanti diganti
         const rc4 = new ModifiedRC4(encryptionKey);
         
         const encryptedFormData = {};
@@ -195,6 +203,12 @@ const Home = () => {
                             </Row>
                         </div>
                     ))}
+                    <Row className="form-row">
+                        <Col md={6}>
+                            <label>Encryption Key:</label>
+                            <input type="text" value={encryptionKey} onChange={handleKeyChange} />
+                        </Col>
+                    </Row>
                     <Row className="form-row">
                         <Col>
                             <button type="submit" className="submit-btn">Submit</button>
