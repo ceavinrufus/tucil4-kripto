@@ -1,6 +1,7 @@
 import RSA from "../utils/RSA";
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import ModifiedRC4 from "../utils/ModifiedRC4"
 
 const Home = () => {
     const [publicKey, setPublicKey] = useState();
@@ -50,12 +51,23 @@ const Home = () => {
             }
         }
         setError('');
+
+        const encryptionKey = 'halohalo'; // nanti diganti
+        const rc4 = new ModifiedRC4(encryptionKey);
+        
+        const encryptedFormData = {};
+        for (let key in formData) {
+            if (formData.hasOwnProperty(key)) {
+                encryptedFormData[key] = rc4.encrypt(String(formData[key]));
+            }
+        }
+
         fetch('http://localhost:8081/insert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify(encryptedFormData)
         })
             .then((response) => response.json())
             .then((data) => {
@@ -87,12 +99,12 @@ const Home = () => {
                         <h5>18221065</h5>
                     </Col>
                     <Col xs={4}>
-                        <h4>Ceavin Rufus</h4>
-                        <h5>18221065</h5>
+                        <h4>Tara Chandani Haryono</h4>
+                        <h5>18221146</h5>
                     </Col>
                     <Col xs={4}>
-                        <h4>Tara</h4>
-                        <h5>18221065</h5>
+                        <h4>Ceavin Rufus</h4>
+                        <h5>18221162</h5>
                     </Col>
                 </Row>
                 <Row className="my-4">
