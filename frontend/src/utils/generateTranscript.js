@@ -184,7 +184,6 @@ export default function generateTranscript(data) {
     C: 2,
     D: 1,
     E: 0,
-    T: -1, // Asumsi T jadi -1
   };
   const sks = data.matkul.reduce((acc, row) => acc + Number(row[2]), 0);
   const total = data.matkul.reduce(

@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "",
   database: "akademik",
-  port: "3307",
+  port: "3306",
 });
 
 app.get("/", (re, res) => {
@@ -42,8 +42,8 @@ app.post("/insert", (req, res) => {
         KodeMK8, NamaMatkul8, Nilai8, SKS8,
         KodeMK9, NamaMatkul9, Nilai9, SKS9,
         KodeMK10, NamaMatkul10, Nilai10, SKS10,
-        IPK
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        IPK, DigitalSignature
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
 
   const values = [
@@ -90,6 +90,7 @@ app.post("/insert", (req, res) => {
     formData.Nilai10,
     formData.SKS10,
     formData.IPK,
+    formData.DigitalSignature,
   ];
 
   db.query(sql, values, (err, result) => {

@@ -222,6 +222,13 @@ class Keccak {
 // const hash256 = keccak_256.hash();
 // console.log("keccak-256:", hash256);
 
+// const keccak_256 = new Keccak(256);
+// keccak_256.update(
+//   "18221162Ceavin Rufus De Prayer PurbaII2221Manajemen Proyek STIA3II3220Arsitektur EnterpriseA3II3230Keamanan InformasiA3II3240Rekayasa Sistem dan Teknologi InformasiA3II3260Platform dan Pengembangan Aplikasi MobileA3II4031Kriptografi dan KodingA2II4035Sistem CerdasA2II4035Manajemen ProdukA2II4472Komunikasi InterpersonalA2II4090Kerja PraktekA24.00"
+// );
+// const hash256 = keccak_256.hash();
+// console.log("keccak-256:", hash256);
+
 // const keccak_384 = new Keccak(384);
 // keccak_384.update("halo");
 // const hash384 = keccak_384.hash();

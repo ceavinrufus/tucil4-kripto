@@ -65,7 +65,55 @@ const CourseForm = () => {
     Nilai10: "",
     SKS10: "",
     IPK: "",
+    DigitalSignature: "",
   });
+  // Buat tes
+  // const [formData, setFormData] = useState({
+  //   NIM: "18221162",
+  //   Nama: "Ceavin Rufus De Prayer Purba",
+  //   KodeMK1: "II2221",
+  //   NamaMatkul1: "Manajemen Proyek STI",
+  //   Nilai1: "A",
+  //   SKS1: "3",
+  //   KodeMK2: "II3220",
+  //   NamaMatkul2: "Arsitektur Enterprise",
+  //   Nilai2: "A",
+  //   SKS2: "3",
+  //   KodeMK3: "II3230",
+  //   NamaMatkul3: "Keamanan Informasi",
+  //   Nilai3: "A",
+  //   SKS3: "3",
+  //   KodeMK4: "II3240",
+  //   NamaMatkul4: "Rekayasa Sistem dan Teknologi Informasi",
+  //   Nilai4: "A",
+  //   SKS4: "3",
+  //   KodeMK5: "II3260",
+  //   NamaMatkul5: "Platform dan Pengembangan Aplikasi Mobile",
+  //   Nilai5: "A",
+  //   SKS5: "3",
+  //   KodeMK6: "II4031",
+  //   NamaMatkul6: "Kriptografi dan Koding",
+  //   Nilai6: "A",
+  //   SKS6: "2",
+  //   KodeMK7: "II4035",
+  //   NamaMatkul7: "Sistem Cerdas",
+  //   Nilai7: "A",
+  //   SKS7: "2",
+  //   KodeMK8: "II4035",
+  //   NamaMatkul8: "Manajemen Produk",
+  //   Nilai8: "A",
+  //   SKS8: "2",
+  //   KodeMK9: "II4472",
+  //   NamaMatkul9: "Komunikasi Interpersonal",
+  //   Nilai9: "A",
+  //   SKS9: "2",
+  //   KodeMK10: "II4090",
+  //   NamaMatkul10: "Kerja Praktek",
+  //   Nilai10: "A",
+  //   SKS10: "2",
+  //   IPK: "",
+  //   DigitalSignature: "",
+  // });
 
   const keccak = new Keccak(256);
 
@@ -78,18 +126,17 @@ const CourseForm = () => {
     setPrivateKey(priKey);
   };
 
-  const previewHash = () => {
-    keccak.update(formData["NIM"]);
-    keccak.update(formData["Nama"]);
+  const digitalSign = (form) => {
+    keccak.update(form["NIM"]);
+    keccak.update(form["Nama"]);
     for (let i = 1; i <= 10; i++) {
-      keccak.update(formData[`KodeMK${i}`]);
-      keccak.update(formData[`NamaMatkul${i}`]);
-      keccak.update(formData[`Nilai${i}`]);
-      keccak.update(formData[`SKS${i}`]);
+      keccak.update(form[`KodeMK${i}`]);
+      keccak.update(form[`NamaMatkul${i}`]);
+      keccak.update(form[`Nilai${i}`]);
+      keccak.update(form[`SKS${i}`]);
     }
-    keccak.update(formData["IPK"]);
-
-    setEncryptionKey(keccak.hash());
+    keccak.update(form["IPK"]);
+    return keccak.hash();
   };
 
   const handleKeyChange = (e) => {
@@ -111,8 +158,11 @@ const CourseForm = () => {
   }, [error, success]);
 
   const handleInputChange = (field, value) => {
-    setFormData({ ...formData, [field]: value });
-    // previewHash();
+    setFormData({
+      ...formData,
+      [field]: value,
+      DigitalSignature: { ...formData, [field]: value },
+    });
   };
 
   useEffect(() => {
@@ -125,7 +175,6 @@ const CourseForm = () => {
         C: 2,
         D: 1,
         E: 0,
-        T: -1, // Asumsi T jadi -1
       };
       let totalSKS = 0;
       let hitungIpk = 0;
@@ -138,19 +187,29 @@ const CourseForm = () => {
         hitungIpk += sks * nilai;
       }
       setTotalSks(totalSKS);
-      setIpk(totalSKS == 0 ? 0 : hitungIpk / totalSKS);
+      setIpk(parseFloat(totalSKS == 0 ? 0 : hitungIpk / totalSKS).toFixed(2));
     };
     countIPK();
   }, [formData]);
 
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      IPK: ipk.toString(),
+      DigitalSignature: digitalSign({ ...formData, IPK: ipk.toString() }),
+    });
+  }, [ipk]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     for (let key in formData) {
       if (formData[key].trim() === "") {
         setError("All fields are required.");
         return;
       }
     }
+
     if (encryptionKey.trim() === "") {
       setError("Encryption key is required.");
       return;
@@ -245,7 +304,7 @@ const CourseForm = () => {
               {[...Array(10)].map((_, index) => (
                 <tr style={{ width: "5%" }} key={index}>
                   <td>{index + 1}</td>
-                  <td style={{ width: "20%" }}>
+                  <td style={{ width: "25%" }}>
                     <Form.Control
                       type="text"
                       value={formData[`KodeMK${index + 1}`]}
@@ -254,7 +313,7 @@ const CourseForm = () => {
                       }
                     />
                   </td>
-                  <td style={{ width: "60%" }}>
+                  <td style={{ width: "40%" }}>
                     <Form.Control
                       type="text"
                       value={formData[`NamaMatkul${index + 1}`]}
@@ -266,7 +325,7 @@ const CourseForm = () => {
                       }
                     />
                   </td>
-                  <td style={{ width: "7.5%" }}>
+                  <td style={{ width: "15%" }}>
                     <Form.Control
                       type="number"
                       value={Number(formData[`SKS${index + 1}`])
@@ -277,7 +336,7 @@ const CourseForm = () => {
                       }}
                     />
                   </td>
-                  <td style={{ width: "7.5%" }}>
+                  <td style={{ width: "15%" }}>
                     <Form.Select
                       value={formData[`Nilai${index + 1}`]}
                       onChange={(e) =>
