@@ -18,7 +18,6 @@ function Database() {
         style={{ cursor: "pointer", position: "relative" }}
         onClick={() => {
           setExpandedCell(headerName);
-          setNeedExpand(false);
         }}
         {...props}
       >
@@ -31,14 +30,14 @@ function Database() {
   }
 
   const keccak = new Keccak(256);
-  useEffect(() => {
-    fetch("http://localhost:8081/get")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  // useEffect(() => {
+  //   fetch("http://localhost:8081/get")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setData(data);
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, []);
 
   const columns = [
     "NIM",
@@ -203,13 +202,20 @@ function Database() {
                   {columns.map((col, colIndex) => (
                     <td
                       key={col}
+                      onClick={() => {
+                        setExpandedCell(col + index);
+                      }}
                       style={{
-                        whiteSpace: expandedCell !== col && "nowrap",
+                        whiteSpace:
+                          expandedCell !== col &&
+                          expandedCell !== col + index &&
+                          "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         maxWidth:
                           colIndex !== columns.length - 1 &&
                           expandedCell !== col &&
+                          expandedCell !== col + index &&
                           "10ch",
                       }}
                     >
