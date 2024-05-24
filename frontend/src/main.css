@@ -45,6 +45,14 @@ body::-webkit-scrollbar {
   box-shadow: 0 2px 5px #aaa;
 }
 
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.items-center {
+  align-items: center;
+}
+
 .alert {
   position: absolute;
   left: 50%;
@@ -95,8 +103,34 @@ body::-webkit-scrollbar {
   border-radius: 5px;
 }
 
-.key p {
+p {
   margin-bottom: 0;
+}
+.p {
+  text-align: left;
+}
+
+.firstSpan .secondSpan {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  font-size: small;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+}
+    
+.firstSpan:hover .secondSpan {
+  visibility: visible;
+}
+
+.stats {
+  background-color: white;
+  padding: 4px 8px;
+  border-radius: 10px;
 }
 
 .form-row {

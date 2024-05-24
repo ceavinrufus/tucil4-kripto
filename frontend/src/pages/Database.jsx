@@ -1,24 +1,44 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Tabs, Tab, Table, Container, Button, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import generateTranscript from "../utils/generateTranscript";
-import { data as d } from "../../db/dummy";
+import { data as d } from "../../mocks/dummy";
 import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
 
 function Database() {
   const [data, setData] = useState(d);
   const [key, setKey] = useState("plaintext");
+  const [expandedCell, setExpandedCell] = useState(null);
+
+  function TableHeader({ headerName, ...props }) {
+    return (
+      <th
+        className="firstSpan"
+        style={{ cursor: "pointer", position: "relative" }}
+        onClick={() => {
+          setExpandedCell(headerName);
+          setNeedExpand(false);
+        }}
+        {...props}
+      >
+        {props.children}
+        {headerName && expandedCell !== headerName && (
+          <span class="secondSpan">Click to expand</span>
+        )}
+      </th>
+    );
+  }
 
   const keccak = new Keccak(256);
-  // useEffect(() => {
-  //   fetch("http://localhost:8081/get")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setData(data);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8081/get")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const columns = [
     "NIM",
@@ -117,13 +137,6 @@ function Database() {
         Object.keys(encryptedItem).forEach((key) => {
           try {
             encryptedItem[key] = rc4.decrypt(atob(encryptedItem[key]));
-            // console.log(
-            //   btoa(
-            //     rc4.encrypt(
-            //       "3571b4ca4c4a30b9da1abe6aef31802fc4647b733019a6c1fd8973a0b2b60243"
-            //     )
-            //   )
-            // );
           } catch (error) {
             // Handle decoding errors
             console.error("Error decoding:", error);
@@ -153,19 +166,32 @@ function Database() {
         <Table striped hover bordered>
           <thead>
             <tr>
-              <th rowSpan={2}>NIM</th>
-              <th rowSpan={2}>Nama</th>
+              <TableHeader headerName={"NIM"} rowSpan={2}>
+                NIM
+              </TableHeader>
+              <TableHeader headerName={"Nama"} rowSpan={2}>
+                Nama
+              </TableHeader>
               {[...Array(10)].map((_, index) => (
-                <th colSpan={4}>Matkul {index + 1}</th>
+                <TableHeader colSpan={4}>Matkul {index + 1}</TableHeader>
               ))}
-              <th rowSpan={2}>IPK</th>
-              <th rowSpan={2}>Digital Signature</th>
-              <th rowSpan={2}>Action</th>
+              <TableHeader headerName={"IPK"} rowSpan={2}>
+                IPK
+              </TableHeader>
+              <TableHeader headerName={"Digital Signature"} rowSpan={2}>
+                Digital Signature
+              </TableHeader>
+              <TableHeader rowSpan={2}>Action</TableHeader>
             </tr>
             <tr>
               {[...Array(10)].map((_, index) =>
                 courseAttr.map((header, idx) => (
-                  <th key={idx}>{header.name}</th>
+                  <TableHeader
+                    headerName={header.name + " " + (index + 1).toString()}
+                    key={idx}
+                  >
+                    {header.name}
+                  </TableHeader>
                 ))
               )}
             </tr>
@@ -175,33 +201,52 @@ function Database() {
               return (
                 <tr key={index}>
                   {columns.map((col, colIndex) => (
-                    <td key={col}>
+                    <td
+                      key={col}
+                      style={{
+                        whiteSpace: expandedCell !== col && "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        maxWidth:
+                          colIndex !== columns.length - 1 &&
+                          expandedCell !== col &&
+                          "10ch",
+                      }}
+                    >
                       {colIndex === columns.length - 1 ? (
                         <div>
                           <Button onClick={() => downloadPDF(row)}>
                             Download
                           </Button>
                           <Button
-                            style={{ marginTop: 4 }}
+                            style={{ marginLeft: 4 }}
                             onClick={() => downloadPDF(row)}
                             className="btn-secondary"
                           >
                             Verify
                           </Button>
                         </div>
-                      ) : // Check if the content length exceeds 20 characters
-                      type === "ciphertext" ? (
-                        row[col.replaceAll(" ", "")]?.length > 10 ? (
-                          // If it exceeds, split the content every 20 characters and join them with line breaks
-                          row[col.replaceAll(" ", "")]
-                            .match(/.{1,10}/g)
-                            .join("\n")
+                      ) : type === "ciphertext" ? (
+                        row[col.replaceAll(" ", "")]?.length > 20 ? (
+                          expandedCell === col + index ? (
+                            <div onClick={() => setExpandedCell(null)}>
+                              {row[col.replaceAll(" ", "")]
+                                .match(/.{1,20}/g)
+                                .join("\n")}
+                            </div>
+                          ) : (
+                            <>
+                              {row[col.replaceAll(" ", "")]
+                                .match(/.{1,20}/g)
+                                .join("\n")}
+                            </>
+                          )
                         ) : (
                           // Otherwise, render the content as is
                           row[col.replaceAll(" ", "")]
                         )
                       ) : (
-                        row[col.replaceAll(" ", "")]
+                        <>{row[col.replaceAll(" ", "")]}</>
                       )}
                     </td>
                   ))}

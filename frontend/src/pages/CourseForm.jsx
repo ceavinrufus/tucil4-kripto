@@ -10,13 +10,16 @@ import {
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RSA from "../utils/RSA";
+import Keccak from "../utils/Keccak";
 
 const CourseForm = () => {
   const [publicKey, setPublicKey] = useState();
   const [privateKey, setPrivateKey] = useState();
-  const [encryptionKey, setEncryptionKey] = useState("");
+  const [encryptionKey, setEncryptionKey] = useState("halohalo");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [ipk, setIpk] = useState(0);
+  const [totalSks, setTotalSks] = useState(0);
   const [formData, setFormData] = useState({
     NIM: "",
     Nama: "",
@@ -60,7 +63,10 @@ const CourseForm = () => {
     NamaMatkul10: "",
     Nilai10: "",
     SKS10: "",
+    IPK: "",
   });
+
+  const keccak = new Keccak(256);
 
   const initializeRSA = (e) => {
     e.preventDefault();
@@ -69,6 +75,20 @@ const CourseForm = () => {
     const priKey = { d: rsa.privateKey.d, n: rsa.publicKey.n };
     setPublicKey(pubKey);
     setPrivateKey(priKey);
+  };
+
+  const previewHash = () => {
+    keccak.update(formData["NIM"]);
+    keccak.update(formData["Nama"]);
+    for (let i = 1; i <= 10; i++) {
+      keccak.update(formData[`KodeMK${i}`]);
+      keccak.update(formData[`NamaMatkul${i}`]);
+      keccak.update(formData[`Nilai${i}`]);
+      keccak.update(formData[`SKS${i}`]);
+    }
+    keccak.update(formData["IPK"]);
+
+    setEncryptionKey(keccak.hash());
   };
 
   const handleKeyChange = (e) => {
@@ -91,7 +111,36 @@ const CourseForm = () => {
 
   const handleInputChange = (field, value) => {
     setFormData({ ...formData, [field]: value });
+    // previewHash();
   };
+
+  useEffect(() => {
+    const countIPK = () => {
+      const ipMapping = {
+        A: 4,
+        AB: 3.5,
+        B: 3,
+        BC: 2.5,
+        C: 2,
+        D: 1,
+        E: 0,
+        T: -1, // Asumsi T jadi -1
+      };
+      let totalSKS = 0;
+      let hitungIpk = 0;
+      for (let i = 1; i <= 10; i++) {
+        const sks = formData[`SKS${i}`] ? Number(formData[`SKS${i}`]) : 0;
+        const nilai = formData[`Nilai${i}`]
+          ? ipMapping[formData[`Nilai${i}`]]
+          : 0;
+        totalSKS += sks;
+        hitungIpk += sks * nilai;
+      }
+      setTotalSks(totalSKS);
+      setIpk(totalSKS == 0 ? 0 : hitungIpk / totalSKS);
+    };
+    countIPK();
+  }, [formData]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -188,9 +237,9 @@ const CourseForm = () => {
             </thead>
             <tbody>
               {[...Array(10)].map((_, index) => (
-                <tr key={index}>
+                <tr style={{ width: "5%" }} key={index}>
                   <td>{index + 1}</td>
-                  <td>
+                  <td style={{ width: "20%" }}>
                     <Form.Control
                       type="text"
                       value={formData[`KodeMK${index + 1}`]}
@@ -199,7 +248,7 @@ const CourseForm = () => {
                       }
                     />
                   </td>
-                  <td>
+                  <td style={{ width: "60%" }}>
                     <Form.Control
                       type="text"
                       value={formData[`NamaMatkul${index + 1}`]}
@@ -211,28 +260,49 @@ const CourseForm = () => {
                       }
                     />
                   </td>
-                  <td>
+                  <td style={{ width: "7.5%" }}>
                     <Form.Control
-                      type="text"
-                      value={formData[`SKS${index + 1}`]}
-                      onChange={(e) =>
-                        handleInputChange(`SKS${index + 1}`, e.target.value)
-                      }
+                      type="number"
+                      value={Number(formData[`SKS${index + 1}`])
+                        .toString()
+                        .replace(/^(0+)|e/gi, "")}
+                      onChange={(e) => {
+                        handleInputChange(`SKS${index + 1}`, e.target.value);
+                      }}
                     />
                   </td>
-                  <td>
-                    <Form.Control
-                      type="text"
+                  <td style={{ width: "7.5%" }}>
+                    <Form.Select
                       value={formData[`Nilai${index + 1}`]}
                       onChange={(e) =>
                         handleInputChange(`Nilai${index + 1}`, e.target.value)
                       }
-                    />
+                    >
+                      <option value={null}></option>
+                      <option value="A">A</option>
+                      <option value="AB">AB</option>
+                      <option value="B">B</option>
+                      <option value="BC">BC</option>
+                      <option value="C">C</option>
+                      <option value="D">D</option>
+                      <option value="E">E</option>
+                      <option value="T">T</option>
+                    </Form.Select>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
+          <Row className="form-row">
+            <Col className="flex-row items-center">
+              <p style={{ marginRight: 10 }}>IPK: </p>
+              <p className="stats">{ipk.toString()} </p>
+            </Col>
+            <Col className="flex-row items-center">
+              <p style={{ marginRight: 10 }}>Total SKS: </p>
+              <p className="stats">{totalSks.toString()} </p>
+            </Col>
+          </Row>
           <Row className="form-row">
             <Col>
               <Form.Group controlId="formKey">
@@ -240,6 +310,7 @@ const CourseForm = () => {
                 <Form.Control
                   type="text"
                   value={encryptionKey}
+                  readOnly
                   onChange={(e) => handleKeyChange(e)}
                 />
               </Form.Group>
