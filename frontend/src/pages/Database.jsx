@@ -1,68 +1,78 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Tab, Table, Container, Button } from "react-bootstrap";
-import { jsPDF } from "jspdf";
+import { Tabs, Tab, Table, Container, Button, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import generateTranscript from "../utils/generateTranscript";
+import { data as d } from "../../db/dummy";
+import ModifiedRC4 from "../utils/ModifiedRC4";
+import Keccak from "../utils/Keccak";
 
 function Database() {
-  const [data, setData] = useState([]);
-  const [key, setKey] = useState("plain");
+  const [data, setData] = useState(d);
+  const [key, setKey] = useState("plaintext");
 
-  useEffect(() => {
-    fetch("http://localhost:8081/get")
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+  const keccak = new Keccak(256);
+  // useEffect(() => {
+  //   fetch("http://localhost:8081/get")
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setData(data);
+  //     })
+  //     .catch((err) => console.error(err));
+  // }, []);
 
   const columns = [
     "NIM",
     "Nama",
-    "KodeMK1",
-    "NamaMatkul1",
-    "Nilai1",
-    "SKS1",
-    "KodeMK2",
-    "NamaMatkul2",
-    "Nilai2",
-    "SKS2",
-    "KodeMK3",
-    "NamaMatkul3",
-    "Nilai3",
-    "SKS3",
-    "KodeMK4",
-    "NamaMatkul4",
-    "Nilai4",
-    "SKS4",
-    "KodeMK5",
-    "NamaMatkul5",
-    "Nilai5",
-    "SKS5",
-    "KodeMK6",
-    "NamaMatkul6",
-    "Nilai6",
-    "SKS6",
-    "KodeMK7",
-    "NamaMatkul7",
-    "Nilai7",
-    "SKS7",
-    "KodeMK8",
-    "NamaMatkul8",
-    "Nilai8",
-    "SKS8",
-    "KodeMK9",
-    "NamaMatkul9",
-    "Nilai9",
-    "SKS9",
-    "KodeMK10",
-    "NamaMatkul10",
-    "Nilai10",
-    "SKS10",
+    "Kode MK 1",
+    "Nama Matkul 1",
+    "Nilai 1",
+    "SKS 1",
+    "Kode MK 2",
+    "Nama Matkul 2",
+    "Nilai 2",
+    "SKS 2",
+    "Kode MK 3",
+    "Nama Matkul 3",
+    "Nilai 3",
+    "SKS 3",
+    "Kode MK 4",
+    "Nama Matkul 4",
+    "Nilai 4",
+    "SKS 4",
+    "Kode MK 5",
+    "Nama Matkul 5",
+    "Nilai 5",
+    "SKS 5",
+    "Kode MK 6",
+    "Nama Matkul 6",
+    "Nilai 6",
+    "SKS 6",
+    "Kode MK 7",
+    "Nama Matkul 7",
+    "Nilai 7",
+    "SKS 7",
+    "Kode MK 8",
+    "Nama Matkul 8",
+    "Nilai 8",
+    "SKS 8",
+    "Kode MK 9",
+    "Nama Matkul 9",
+    "Nilai 9",
+    "SKS 9",
+    "Kode MK 10",
+    "Nama Matkul 10",
+    "Nilai 10",
+    "SKS 10",
     "IPK",
-    "DigitalSignature",
+    "Digital Signature",
     "Download PDF",
+  ];
+
+  const courseAttr = [
+    { name: "Kode MK", width: "80px" },
+    { name: "Nama Matkul", width: "200px" },
+    { name: "Nilai", width: "50px" },
+    { name: "SKS", width: "30px" },
   ];
 
   const downloadPDF = (rowData) => {
@@ -92,48 +102,118 @@ function Database() {
       }
       data.matkul.push([kodeMK, namaMatkul, sks, nilai]);
     }
-    console.log(data);
 
     generateTranscript(data);
   };
-
   const renderTable = (type) => {
+    const rc4 = new ModifiedRC4("halohalo");
     let displayData = data;
-    if (type === "encrypted" || type === "encrypted-signed") {
+
+    if (type === "plaintext") {
       // You can add encryption logic here
-      displayData = data.map((item) => ({
-        ...item,
-        // Apply encryption to required fields here
-      }));
+      displayData = data.map((item) => {
+        const encryptedItem = { ...item };
+        // Apply encryption to all fields
+        Object.keys(encryptedItem).forEach((key) => {
+          try {
+            encryptedItem[key] = rc4.decrypt(atob(encryptedItem[key]));
+            // console.log(
+            //   btoa(
+            //     rc4.encrypt(
+            //       "3571b4ca4c4a30b9da1abe6aef31802fc4647b733019a6c1fd8973a0b2b60243"
+            //     )
+            //   )
+            // );
+          } catch (error) {
+            // Handle decoding errors
+            console.error("Error decoding:", error);
+          }
+        });
+        return encryptedItem;
+      });
     }
+
+    const verify = (row) => {
+      keccak.update(row["NIM"]);
+      keccak.update(row["Nama"]);
+      for (let i = 1; i <= 10; i++) {
+        keccak.update(row[`KodeMK${i}`]);
+        keccak.update(row[`NamaMatkul${i}`]);
+        keccak.update(row[`Nilai${i}`]);
+        keccak.update(row[`SKS${i}`]);
+      }
+      keccak.update(row["IPK"]);
+
+      const hasil = keccak.hash();
+      return hasil === row["DigitalSignature"];
+    };
 
     return (
       <div style={{ overflowX: "auto", maxWidth: "100%" }}>
-        <Table striped bordered hover>
+        <Table striped hover bordered>
           <thead>
             <tr>
-              {columns.map((header) => (
-                <th key={header}>{header}</th>
+              <th rowSpan={2}>NIM</th>
+              <th rowSpan={2}>Nama</th>
+              {[...Array(10)].map((_, index) => (
+                <th colSpan={4}>Matkul {index + 1}</th>
               ))}
+              <th rowSpan={2}>IPK</th>
+              <th rowSpan={2}>Digital Signature</th>
+              <th rowSpan={2}>Action</th>
+            </tr>
+            <tr>
+              {[...Array(10)].map((_, index) =>
+                courseAttr.map((header, idx) => (
+                  <th key={idx}>{header.name}</th>
+                ))
+              )}
             </tr>
           </thead>
           <tbody>
-            {displayData.map((row, index) => (
-              <tr key={index}>
-                {columns.map((col, colIndex) => (
-                  <td
-                    key={col}
-                    style={{ padding: "10px", border: "1px solid #ddd" }}
-                  >
-                    {colIndex === columns.length - 1 ? (
-                      <Button onClick={() => downloadPDF(row)}>Download</Button>
-                    ) : (
-                      row[col]
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {displayData.map((row, index) => {
+              return (
+                <tr key={index}>
+                  {columns.map((col, colIndex) => (
+                    <td
+                      key={col}
+                      style={{
+                        padding: "10px",
+                        border: "1px solid #ddd",
+                      }}
+                    >
+                      {colIndex === columns.length - 1 ? (
+                        <div>
+                          <Button onClick={() => downloadPDF(row)}>
+                            Download
+                          </Button>
+                          <Button
+                            style={{ marginTop: 4 }}
+                            onClick={() => downloadPDF(row)}
+                            className="btn-secondary"
+                          >
+                            Verify
+                          </Button>
+                        </div>
+                      ) : // Check if the content length exceeds 20 characters
+                      type === "ciphertext" ? (
+                        row[col.replaceAll(" ", "")]?.length > 10 ? (
+                          // If it exceeds, split the content every 20 characters and join them with line breaks
+                          row[col.replaceAll(" ", "")]
+                            .match(/.{1,10}/g)
+                            .join("\n")
+                        ) : (
+                          // Otherwise, render the content as is
+                          row[col.replaceAll(" ", "")]
+                        )
+                      ) : (
+                        row[col.replaceAll(" ", "")]
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </Table>
       </div>
@@ -142,20 +222,17 @@ function Database() {
 
   return (
     <div className="homepage">
+      <Row style={{ marginBottom: "2rem" }}>
+        <h1 style={{ fontWeight: "bold" }}>Database Akademik</h1>
+      </Row>
+
       <Container>
-        <h1>Database Akademik</h1>
-        <Tabs activeKey={key} onSelect={(k) => setKey(k)} className="mb-3">
-          <Tab eventKey="plain" title="Tabel Plain">
-            {renderTable("plain")}
+        <Tabs activeKey={key} onSelect={(k) => setKey(k)}>
+          <Tab eventKey="plaintext" title="Plaintext">
+            {renderTable("plaintext")}
           </Tab>
-          <Tab eventKey="encrypted" title="Tabel Terenkripsi">
-            {renderTable("encrypted")}
-          </Tab>
-          <Tab
-            eventKey="encrypted-signed"
-            title="Tabel Terenkripsi dan Tertandatangan"
-          >
-            {renderTable("encrypted-signed")}
+          <Tab eventKey="ciphertext" title="Ciphertext">
+            {renderTable("ciphertext")}
           </Tab>
         </Tabs>
       </Container>

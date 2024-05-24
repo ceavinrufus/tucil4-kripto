@@ -124,11 +124,10 @@ const InputData = () => {
 
   return (
     <div className="homepage">
+      <Row style={{ marginBottom: "2rem" }}>
+        <h1 style={{ fontWeight: "bold" }}>Data Akademik Mahasiswa</h1>
+      </Row>
       <Container>
-        <Row className="">
-          <h2>Data Akademik Mahasiswa</h2>
-        </Row>
-
         <form onSubmit={handleSubmit}>
           {error && <div style={{ color: "red" }}>{error}</div>}
           {success && <div style={{ color: "green" }}>{success}</div>}
