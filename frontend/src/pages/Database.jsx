@@ -203,7 +203,9 @@ function Database() {
                     <td
                       key={col}
                       onClick={() => {
-                        setExpandedCell(col + index);
+                        if (colIndex !== columns.length - 1) {
+                          setExpandedCell(col + index);
+                        }
                       }}
                       style={{
                         whiteSpace:
