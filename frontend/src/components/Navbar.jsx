@@ -18,6 +18,9 @@ function CustomNavbar() {
             <Nav.Link as={Link} to="/transcripts">
               Database
             </Nav.Link>
+            <Nav.Link as={Link} to="/decrypt">
+              Transcript Decrypter
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>
