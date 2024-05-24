@@ -175,13 +175,7 @@ function Database() {
               return (
                 <tr key={index}>
                   {columns.map((col, colIndex) => (
-                    <td
-                      key={col}
-                      style={{
-                        padding: "10px",
-                        border: "1px solid #ddd",
-                      }}
-                    >
+                    <td key={col}>
                       {colIndex === columns.length - 1 ? (
                         <div>
                           <Button onClick={() => downloadPDF(row)}>
