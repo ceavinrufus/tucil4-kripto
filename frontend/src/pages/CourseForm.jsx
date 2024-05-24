@@ -14,8 +14,8 @@ import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
 
 const CourseForm = () => {
-  const [publicKey, setPublicKey] = useState();
-  const [privateKey, setPrivateKey] = useState();
+  const [publicKey, setPublicKey] = useState({ e: null, n: null });
+  const [privateKey, setPrivateKey] = useState({ d: null, n: null });
   const [encryptionKey, setEncryptionKey] = useState("halohalo");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -116,10 +116,10 @@ const CourseForm = () => {
   // });
 
   const keccak = new Keccak(256);
+  const rsa = new RSA();
 
   const initializeRSA = (e) => {
     e.preventDefault();
-    const rsa = new RSA();
     const pubKey = { e: rsa.publicKey.e, n: rsa.publicKey.n };
     const priKey = { d: rsa.privateKey.d, n: rsa.publicKey.n };
     setPublicKey(pubKey);
@@ -136,7 +136,9 @@ const CourseForm = () => {
       keccak.update(form[`SKS${i}`]);
     }
     keccak.update(form["IPK"]);
-    return keccak.hash();
+    const hash = keccak.hash();
+
+    return rsa.encrypt(hash, privateKey);
   };
 
   const handleKeyChange = (e) => {
@@ -161,7 +163,7 @@ const CourseForm = () => {
     setFormData({
       ...formData,
       [field]: value,
-      DigitalSignature: { ...formData, [field]: value },
+      DigitalSignature: digitalSign({ ...formData, [field]: value }),
     });
   };
 
@@ -191,6 +193,26 @@ const CourseForm = () => {
     };
     countIPK();
   }, [formData]);
+
+  const downloadPrivateKey = () => {
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(privateKey)], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "privateKey.pri";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
+
+  const downloadPublicKey = () => {
+    const element = document.createElement("a");
+    const file = new Blob([JSON.stringify(publicKey)], { type: "text/plain" });
+    element.href = URL.createObjectURL(file);
+    element.download = "publicKey.pub";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+  };
 
   useEffect(() => {
     setFormData({
@@ -382,19 +404,17 @@ const CourseForm = () => {
               <Button
                 style={{ marginRight: "10px", marginTop: "10px" }}
                 variant="primary"
+                disabled={!privateKey.d || !privateKey.n}
                 type="submit"
               >
                 Submit
               </Button>
               <Button
                 style={{ marginTop: "10px" }}
-                disabled={publicKey && privateKey}
                 variant="secondary"
                 onClick={initializeRSA}
               >
-                {publicKey && privateKey
-                  ? "Key Already Generated!"
-                  : "Generate Key RSA!"}
+                Generate Key RSA!
               </Button>
             </Col>
             <Col>
@@ -409,6 +429,14 @@ const CourseForm = () => {
                   ) : (
                     <p style={{ color: "#ddd000" }}>Not generated yet</p>
                   )}
+                  <Button
+                    style={{ marginRight: "10px", marginTop: "10px" }}
+                    variant="primary"
+                    onClick={downloadPublicKey}
+                    disabled={!publicKey.e || !publicKey.n}
+                  >
+                    Download
+                  </Button>
                 </div>
                 <div className="key">
                   <p>Your Private Key: </p>
@@ -420,6 +448,14 @@ const CourseForm = () => {
                   ) : (
                     <p style={{ color: "#ddd000" }}>Not generated yet</p>
                   )}
+                  <Button
+                    style={{ marginRight: "10px", marginTop: "10px" }}
+                    variant="primary"
+                    onClick={downloadPrivateKey}
+                    disabled={!privateKey.d || !privateKey.n}
+                  >
+                    Download
+                  </Button>
                 </div>
               </div>
             </Col>

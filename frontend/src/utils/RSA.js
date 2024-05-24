@@ -71,47 +71,26 @@ class RSA {
     this.privateKey = { d, n: this.n };
   }
 
-  encrypt(plaintext, publicKey) {
-    const { e, n } = publicKey;
+  encrypt(plaintext, privateKey) {
+    const { d, n } = privateKey;
     const encrypted = [];
     for (let i = 0; i < plaintext.length; i++) {
       const charCode = plaintext.charCodeAt(i);
-      const encryptedCharCode = this.modPow(charCode, e, n);
+      const encryptedCharCode = this.modPow(charCode, d, n);
       encrypted.push(encryptedCharCode.toString());
     }
     return encrypted.join(" ");
   }
-  encryptFile(plainfile, publicKey) {
+  decrypt(ciphertext, publicKey) {
     const { e, n } = publicKey;
-    let encrypted = [];
-    for (let i = 0; i < plainfile.length; i++) {
-      const code = plainfile[i];
-      const encryptedCode = this.modPow(code, e, n);
-      encrypted[i] = encryptedCode.toString();
-    }
-    return encrypted;
-  }
-  decrypt(ciphertext, privateKey) {
-    const { d, n } = privateKey;
     const decrypted = [];
     const encryptedCodes = ciphertext.split(" ");
     for (let i = 0; i < encryptedCodes.length; i++) {
       const encryptedCharCode = encryptedCodes[i];
-      const decryptedCharCode = this.modPow(encryptedCharCode, d, n);
+      const decryptedCharCode = this.modPow(encryptedCharCode, e, n);
       decrypted.push(String.fromCharCode(Number(decryptedCharCode)));
     }
     return decrypted.join("");
-  }
-
-  decryptFile(cipherfile, privateKey) {
-    const { d, n } = privateKey;
-    let decrypted = new Uint8Array(cipherfile.length);
-    for (let i = 0; i < cipherfile.length; i++) {
-      const encryptedCode = Number(cipherfile[i]);
-      const decryptedCode = this.modPow(encryptedCode, d, n);
-      decrypted[i] = Number(decryptedCode);
-    }
-    return decrypted;
   }
 }
 
