@@ -2,23 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Tabs, Tab, Table, Container, Button, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import generateTranscript from "../utils/generateTranscript";
-import { data as d } from "../../db/dummy";
+// import { data as d } from "../../mocks/dummy";
 import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
 
 function Database() {
-  const [data, setData] = useState(d);
+  const [data, setData] = useState([]);
   const [key, setKey] = useState("plaintext");
 
   const keccak = new Keccak(256);
-  // useEffect(() => {
-  //   fetch("http://localhost:8081/get")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setData(data);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8081/get")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const columns = [
     "NIM",
@@ -117,13 +117,6 @@ function Database() {
         Object.keys(encryptedItem).forEach((key) => {
           try {
             encryptedItem[key] = rc4.decrypt(atob(encryptedItem[key]));
-            // console.log(
-            //   btoa(
-            //     rc4.encrypt(
-            //       "3571b4ca4c4a30b9da1abe6aef31802fc4647b733019a6c1fd8973a0b2b60243"
-            //     )
-            //   )
-            // );
           } catch (error) {
             // Handle decoding errors
             console.error("Error decoding:", error);

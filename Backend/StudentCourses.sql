@@ -71,7 +71,7 @@ CREATE TABLE `StudentCourses` (
   `Nilai10` varchar(100) DEFAULT NULL,
   `SKS10` varchar(100) DEFAULT NULL,
   `IPK` varchar(100) DEFAULT NULL,
-  `DigitalSignature` varbinary(255) DEFAULT NULL
+  `DigitalSignature` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --

@@ -10,6 +10,7 @@ import {
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import RSA from "../utils/RSA";
+import ModifiedRC4 from "../utils/ModifiedRC4";
 
 const CourseForm = () => {
   const [publicKey, setPublicKey] = useState();
@@ -111,10 +112,16 @@ const CourseForm = () => {
 
     const encryptedFormData = {};
     for (let key in formData) {
-      if (Object.prototype.hasOwnProperty.call(formData, key)) {
+      // if (Object.prototype.hasOwnProperty.call(formData, key)) {
+      //   encryptedFormData[key] = rc4.encrypt(String(formData[key]));
+      // }
+      try {
         encryptedFormData[key] = rc4.encrypt(String(formData[key]));
+      } catch (error) {
+        console.error("Error encoding: ", error)
       }
     }
+    
 
     fetch("http://localhost:8081/insert", {
       method: "POST",
