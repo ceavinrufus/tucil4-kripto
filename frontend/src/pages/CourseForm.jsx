@@ -138,7 +138,7 @@ const CourseForm = () => {
     keccak.update(form["IPK"]);
     const hash = keccak.hash();
 
-    return rsa.encrypt(hash, privateKey);
+    return btoa(rsa.encrypt(hash, privateKey));
   };
 
   const handleKeyChange = (e) => {
@@ -225,8 +225,13 @@ const CourseForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    for (let key in formData) {
-      if (formData[key].trim() === "") {
+    const formDataSubmit = {
+      ...formData,
+      PublicKey: JSON.stringify(publicKey),
+    };
+
+    for (let key in formDataSubmit) {
+      if (formDataSubmit[key].trim() === "") {
         setError("All fields are required.");
         return;
       }
@@ -241,12 +246,12 @@ const CourseForm = () => {
     const rc4 = new ModifiedRC4(encryptionKey);
 
     const encryptedFormData = {};
-    for (let key in formData) {
-      // if (Object.prototype.hasOwnProperty.call(formData, key)) {
-      //   encryptedFormData[key] = rc4.encrypt(String(formData[key]));
+    for (let key in formDataSubmit) {
+      // if (Object.prototype.hasOwnProperty.call(formDataSubmit, key)) {
+      //   encryptedFormData[key] = rc4.encrypt(String(formDataSubmit[key]));
       // }
       try {
-        encryptedFormData[key] = btoa(rc4.encrypt(String(formData[key])));
+        encryptedFormData[key] = btoa(rc4.encrypt(String(formDataSubmit[key])));
       } catch (error) {
         console.error("Error encoding: ", error);
       }

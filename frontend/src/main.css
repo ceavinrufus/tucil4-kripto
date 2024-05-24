@@ -54,9 +54,9 @@ body::-webkit-scrollbar {
 }
 
 .alert {
-  position: absolute;
+  position: fixed;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%,-250%);
 }
 
 .custom-navbar .navbar-nav {

@@ -71,15 +71,13 @@ CREATE TABLE `StudentCourses` (
   `Nilai10` varchar(100) DEFAULT NULL,
   `SKS10` varchar(100) DEFAULT NULL,
   `IPK` varchar(100) DEFAULT NULL,
-  `DigitalSignature` varchar(255) DEFAULT NULL
+  `DigitalSignature` varchar(255) DEFAULT NULL,
+  `PublicKey` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `StudentCourses`
 --
-
-INSERT INTO `StudentCourses` (`NIM`, `Nama`, `KodeMK1`, `NamaMatkul1`, `Nilai1`, `SKS1`, `KodeMK2`, `NamaMatkul2`, `Nilai2`, `SKS2`, `KodeMK3`, `NamaMatkul3`, `Nilai3`, `SKS3`, `KodeMK4`, `NamaMatkul4`, `Nilai4`, `SKS4`, `KodeMK5`, `NamaMatkul5`, `Nilai5`, `SKS5`, `KodeMK6`, `NamaMatkul6`, `Nilai6`, `SKS6`, `KodeMK7`, `NamaMatkul7`, `Nilai7`, `SKS7`, `KodeMK8`, `NamaMatkul8`, `Nilai8`, `SKS8`, `KodeMK9`, `NamaMatkul9`, `Nilai9`, `SKS9`, `KodeMK10`, `NamaMatkul10`, `Nilai10`, `SKS10`, `IPK`, `DigitalSignature`) VALUES
-('NGFiNDA0ODYzZTM5NzdjZA==', 'M2FlYjQzYzcyZjVhMjY5MjVjZDU5Mzc0', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODYzYTM5', 'MzZlZDU4ZDU2NTZjMmE5OTQ2OWFhMjdhYWNhYzA1MTNkMjdhOWRiZg==', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'MzJjNTA0ODUzYzM5', 'MjhlNTQ1YzA2YTY0Njc5ODQ5ZDRjMDVhYWRiNjFmNDdmMzcwOWRhYmQwZmY0ZTJkZGQxZWQ3MjEzYTAw', 'M2E=', 'NDg=', 'NDhhMjAyODE=', 'NDhiOTAxODU2ZDNkMjQ5ZDFjZDlkNDdhZWNmNTE0MGFmMjdhZDhiZmMwYmEzMzIzZDUwODkxNjQ2NzQyODVlOTgyYzMyOTkyNmJjZmNhYjUxZTY0NGEyYzkzMGE0NzMxOTkxODdiNWY2ZTIyNTU3MmMxMzk2MGNjZDVmMDgwMDQ=');
 
 
 --

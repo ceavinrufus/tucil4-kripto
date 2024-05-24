@@ -1,8 +1,4 @@
 import { jsPDF } from "jspdf";
-// import fs from "fs";
-// const logoPath = "";
-// const logoBase64 =
-//   "data:image/jpg;base64," Base64.enc;
 
 export default function generateTranscript(data) {
   const doc = new jsPDF();
@@ -235,20 +231,25 @@ export default function generateTranscript(data) {
   const ttdEndText = "--End signature--";
   const kaprodiText = `(${data.kaprodi.name})`;
   doc.text(ttdText, pageWidth - margin - doc.getTextWidth(ttdText), ttdStartY);
-  doc.text(
-    data.kaprodi.sign,
-    pageWidth - margin - doc.getTextWidth(data.kaprodi.sign),
-    ttdStartY + 5
-  );
+
+  const wrappedSignature = doc.splitTextToSize(data.kaprodi.sign, 50);
+  wrappedSignature.forEach((line, index) => {
+    doc.text(
+      line,
+      pageWidth - margin - doc.getTextWidth(line),
+      ttdStartY + 5 * (index + 1)
+    );
+  });
+
   doc.text(
     ttdEndText,
     pageWidth - margin - doc.getTextWidth(ttdEndText),
-    ttdStartY + 10
+    ttdStartY + 5 * (wrappedSignature.length + 1)
   );
   doc.text(
     kaprodiText,
     pageWidth - margin - doc.getTextWidth(kaprodiText),
-    ttdStartY + 20
+    ttdStartY + 5 * (wrappedSignature.length + 3)
   );
 
   doc.text(

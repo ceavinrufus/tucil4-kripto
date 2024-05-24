@@ -104,7 +104,7 @@ function Database() {
       matkul: [],
       kaprodi: {
         name: "I Gusti Bagus Baskara", // Assuming the kaprodi name is constant
-        sign: "BFc65FFeCD2108CE340B", // Assuming the signature is constant
+        sign: rowData["DigitalSignature"], // Assuming the signature is constant
       },
     };
 
