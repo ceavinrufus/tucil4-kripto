@@ -7,7 +7,7 @@ import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
 
 function Database() {
-  const [data, setData] = useState(d);
+  const [data, setData] = useState([]);
   const [key, setKey] = useState("plaintext");
   const [expandedCell, setExpandedCell] = useState(null);
 
@@ -30,14 +30,14 @@ function Database() {
   }
 
   const keccak = new Keccak(256);
-  // useEffect(() => {
-  //   fetch("http://localhost:8081/get")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setData(data);
-  //     })
-  //     .catch((err) => console.error(err));
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8081/get")
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const columns = [
     "NIM",

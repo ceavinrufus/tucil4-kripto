@@ -12,7 +12,7 @@ const db = mysql.createConnection({
   user: "root",
   password: "",
   database: "akademik",
-  port: "3307",
+  port: "3306",
 });
 
 app.get("/", (re, res) => {
