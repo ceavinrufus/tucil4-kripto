@@ -165,7 +165,7 @@ const CourseForm = () => {
       //   encryptedFormData[key] = rc4.encrypt(String(formData[key]));
       // }
       try {
-        encryptedFormData[key] = rc4.encrypt(String(formData[key]));
+        encryptedFormData[key] = btoa(rc4.encrypt(String(formData[key])));
       } catch (error) {
         console.error("Error encoding: ", error);
       }

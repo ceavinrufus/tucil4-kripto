@@ -7,7 +7,7 @@ import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
 
 function Database() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(d);
   const [key, setKey] = useState("plaintext");
   const [expandedCell, setExpandedCell] = useState(null);
 
