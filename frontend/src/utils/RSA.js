@@ -100,9 +100,9 @@ class RSA {
 // console.log("Private Key:", rsa.privateKey);
 
 // const plaintext = "haii";
-// const encrypted = rsa.encrypt(plaintext, { e: 5, n: 564803 });
+// const encrypted = rsa.encrypt(plaintext, { d: 399291, n: 600499 });
 // console.log("Encrypted Message:", encrypted);
 
-// const decrypted = rsa.decrypt(encrypted, { d: 337493, n: 564803 });
+// const decrypted = rsa.decrypt(encrypted, { e: 3, n: 600499 });
 // console.log("Decrypted Message:", decrypted);
 export default RSA;

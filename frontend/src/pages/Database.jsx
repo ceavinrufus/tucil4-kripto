@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from "react";
 import { Tabs, Tab, Table, Container, Button, Row } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import generateTranscript from "../utils/generateTranscript";
-import { data as d } from "../../mocks/dummy";
 import ModifiedRC4 from "../utils/ModifiedRC4";
 import Keccak from "../utils/Keccak";
+import RSA from "../utils/RSA";
 
 function Database() {
-  const [data, setData] = useState(d);
+  const [data, setData] = useState([]);
   const [key, setKey] = useState("plaintext");
   const [expandedCell, setExpandedCell] = useState(null);
 
@@ -29,7 +29,6 @@ function Database() {
     );
   }
 
-  const keccak = new Keccak(256);
   useEffect(() => {
     fetch("http://localhost:8081/get")
       .then((res) => res.json())
@@ -125,6 +124,7 @@ function Database() {
     generateTranscript(data);
   };
   const renderTable = (type) => {
+    const rsa = new RSA();
     const rc4 = new ModifiedRC4("halohalo");
     let displayData = data;
 
@@ -141,11 +141,17 @@ function Database() {
             console.error("Error decoding:", error);
           }
         });
+        encryptedItem["DigitalSignature"] = rsa.decrypt(
+          encryptedItem["DigitalSignature"],
+          JSON.parse(encryptedItem.PublicKey)
+        );
         return encryptedItem;
       });
     }
 
     const verify = (row) => {
+      const keccak = new Keccak(256);
+
       keccak.update(row["NIM"]);
       keccak.update(row["Nama"]);
       for (let i = 1; i <= 10; i++) {
@@ -157,7 +163,12 @@ function Database() {
       keccak.update(row["IPK"]);
 
       const hasil = keccak.hash();
-      return hasil === row["DigitalSignature"];
+
+      if (hasil === row["DigitalSignature"]) {
+        alert("Trasncript valid!");
+      } else {
+        alert("Transcript isn't valid!");
+      }
     };
 
     return (
@@ -230,7 +241,7 @@ function Database() {
                           </Button>
                           <Button
                             style={{ marginLeft: 4 }}
-                            onClick={() => downloadPDF(row)}
+                            onClick={() => verify(row)}
                             className="btn-secondary"
                           >
                             Verify

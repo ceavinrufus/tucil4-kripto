@@ -138,7 +138,7 @@ const CourseForm = () => {
     keccak.update(form["IPK"]);
     const hash = keccak.hash();
 
-    return btoa(rsa.encrypt(hash, privateKey));
+    return rsa.encrypt(hash, privateKey);
   };
 
   const handleKeyChange = (e) => {
