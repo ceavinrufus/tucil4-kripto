@@ -152,3 +152,79 @@ p {
 .form-row {
   margin-bottom: 20px;
 }
+
+.reader{
+  margin-bottom: 20px;
+}
+
+.input-group, .button-group, .result-group {
+  margin-bottom: 20px;
+}
+
+.input-group label, .button-group button, .result-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.input-group textarea, .input-group input, .button-group button, .result-group textarea {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #000;
+  border-radius: 5px;
+  resize: none;
+}
+
+.title{
+  display: flex;
+  margin-top: 300px;
+  text-align: left;
+  justify-content: space-between;
+  width: 100%;
+  
+}
+
+.titlePageText{
+  font-size: 70px;
+  font-weight: bold;
+}
+
+.col-spacing{
+  margin-right: 100px;
+}
+
+.col2{
+  display: flex; /* ini harus tetep flex biar bisa diatur2 */
+  text-align: center;
+  align-self: center;
+  justify-content: center;
+}
+
+.button-decrypt{
+  background-color: #eb8055;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 150px; /* Set the width of the button */
+  height: fit-content; /* Set the height of the button */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button-download-decrypt{
+  background-color: #eb8055;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  width: 450px; /* Set the width of the button */
+  height: fit-content; /* Set the height of the button */
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.button-decrypt:hover, .button-download-decrypt:hover {
+  background-color: #e13434;
+}
