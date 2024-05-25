@@ -78,12 +78,15 @@ body::-webkit-scrollbar {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+
 .nav-link:hover {
-  color: #ffc107; /* Change color on hover */
+  color: #ac7b6e; /* Change color on hover */
 }
 
-
 @media (max-width: 991.98px) {
+  .nav-link:hover {
+    color: #ffc107; /* Change color on hover */
+  }
   .navbar-collapse {
     padding: 10px;
     background-color: white !important;

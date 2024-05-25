@@ -1,13 +1,18 @@
-# TransCrypt: RSA-Encrypted Chat Platform
+# TransCrypt: Secure Academic Records Management
 
-ChatRSA provides a secure chat environment where messages are encrypted using the robust RSA (Rivest–Shamir–Adleman) algorithm. RSA ensures confidentiality by allowing users to exchange messages that are unreadable by anyone who doesn't possess the recipient's private key.
+Transcrypt is an web application designed specifically for educators to simplify and enhance the process of creating and managing transcripts. With powerful encryption, decryption, signing, and verification features, Transcrypt ensures the security and integrity of academic records, making it an invaluable tool for teachers, administrators, and educational institutions.
 
 ## Created by:
 
 - 18221065 Josua Adriel Sinabutar
+- 18221146 Tara Chandani Haryono
 - 18221162 Ceavin Rufus De Prayer Purba
 
 ## How to run in local development server:
+
+```
+npm install
+```
 
 1. Frontend
 
@@ -16,36 +21,26 @@ cd frontend
 npm start
 ```
 
-2. API server
+2. Backend
 
-(You need to create a MongoDB database and store the connection link in the `.env` file located on `backend` folder)
+(You need to create a MySQL database and store the port number in the `.env` file located on `backend` folder)
 
 ```
 cd backend
-echo MONGO_URL="mongo connection string" > .env & attrib +s .env
-node index.js
-```
-
-3. Chat server (socket)
-
-```
-cd chat
-echo NODE_ENV="development" > .env & attrib +s .env
-node index.js
+echo PORT="db port number" > .env & attrib +s .env
+npm start
 ```
 
 ## Completeness
 
-| Specification                         | Status |
-| ------------------------------------- | ------ |
-| Key generation                        | ✅     |
-| Send public key                       | ✅     |
-| Text encryption                       | ✅     |
-| File encryption                       | ✅     |
-| Text decryption                       | ✅     |
-| File decryption                       | ✅     |
-| Download text (encrypted & decrypted) | ✅     |
-| Download file (encrypted & decrypted) | ✅     |
-| Real chat app \*)                     | ✅     |
-
-\*) Due to limited hosting features from Vercel, if you want to use the real chat app feature you can only access it via the local development server
+| Specification                                     | Status |
+| ------------------------------------------------- | ------ |
+| RSA Key generation                                | ✅     |
+| Digital Signature                                 | ✅     |
+| Verification                                      | ✅     |
+| Academic Records Input                            | ✅     |
+| Academic Records Encryption                       | ✅     |
+| Academic Records Decryption                       | ✅     |
+| Transcript File Encryption                        | ✅     |
+| Transcript File Decryption                        | ✅     |
+| Download transcript file (encrypted or decrypted) | ✅     |
