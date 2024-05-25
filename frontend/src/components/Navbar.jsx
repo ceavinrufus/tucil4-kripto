@@ -7,7 +7,7 @@ function CustomNavbar() {
     <Navbar variant="transparent" expand="lg" className="custom-navbar">
       <Container>
         <Navbar.Brand as={Link} to="/">
-          TranScript
+          TransCrypt
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
