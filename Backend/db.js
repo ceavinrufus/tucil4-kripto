@@ -6,7 +6,7 @@ const dbConfig = {
   user: "root",
   password: "",
   database: "akademik",
-  port: "3307",
+  port: process.env.PORT,
 };
 
 let connection;
