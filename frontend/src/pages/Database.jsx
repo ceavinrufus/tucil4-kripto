@@ -23,7 +23,7 @@ function Database() {
       >
         {props.children}
         {headerName && expandedCell !== headerName && (
-          <span class="secondSpan">Click to expand</span>
+          <span className="secondSpan">Click to expand</span>
         )}
       </th>
     );
@@ -172,7 +172,9 @@ function Database() {
                 Nama
               </TableHeader>
               {[...Array(10)].map((_, index) => (
-                <TableHeader colSpan={4}>Matkul {index + 1}</TableHeader>
+                <TableHeader key={index} colSpan={4}>
+                  Matkul {index + 1}
+                </TableHeader>
               ))}
               <TableHeader headerName={"IPK"} rowSpan={2}>
                 IPK

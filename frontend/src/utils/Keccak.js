@@ -13,11 +13,11 @@ class Keccak {
   }
 
   // Buat debugging
-  dec2bin(arr) {
-    for (let i = 0; i < arr.length; i++) {
-      console.log(i, ":", arr[i].toString(16));
-    }
-  }
+  // dec2bin(arr) {
+  //   for (let i = 0; i < arr.length; i++) {
+  //     console.log(i, ":", arr[i].toString(16));
+  //   }
+  // }
 
   hexToBigInt(hex) {
     return BigInt("0x" + hex);
