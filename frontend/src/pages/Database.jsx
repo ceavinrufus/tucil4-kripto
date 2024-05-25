@@ -138,25 +138,26 @@ function Database() {
     const rc4 = new ModifiedRC4("halohalo");
     let displayData = data;
 
-    if (type === "plaintext") {
-      // You can add encryption logic here
-      displayData = data.map((item) => {
-        const encryptedItem = { ...item };
-        // Apply encryption to all fields
-        Object.keys(encryptedItem).forEach((key) => {
-          try {
-            encryptedItem[key] = rc4.decrypt(atob(encryptedItem[key]));
-          } catch (error) {
-            // Handle decoding errors
-            console.error("Error decoding:", error);
-          }
-        });
-        encryptedItem["DigitalSignature"] = rsa.decrypt(
-          encryptedItem["DigitalSignature"],
-          JSON.parse(encryptedItem.PublicKey)
-        );
-        return encryptedItem;
+    const plainData = data.map((item) => {
+      const encryptedItem = { ...item };
+      // encryption untuk semua field
+      Object.keys(encryptedItem).forEach((key) => {
+        try {
+          encryptedItem[key] = rc4.decrypt(atob(encryptedItem[key]));
+        } catch (error) {
+          // Handle decoding errors
+          console.error("Error decoding:", error);
+        }
       });
+      encryptedItem["DigitalSignature"] = rsa.decrypt(
+        encryptedItem["DigitalSignature"],
+        JSON.parse(encryptedItem.PublicKey)
+      );
+      return encryptedItem;
+    });
+
+    if (type === "plaintext") {
+      displayData = plainData;
     }
 
     const verify = (row) => {
@@ -270,7 +271,7 @@ function Database() {
                     >
                       {colIndex === columns.length - 1 ? (
                         <div>
-                          <Button onClick={() => downloadPDF(row)}>
+                          <Button onClick={() => downloadPDF(plainData[index])}>
                             Download
                           </Button>
                           <Button
