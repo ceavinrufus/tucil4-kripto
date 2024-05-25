@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Tabs, Tab, Table, Container, Button, Row } from "react-bootstrap";
+import {
+  Tabs,
+  Tab,
+  Table,
+  Container,
+  Button,
+  Row,
+  Alert,
+} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import generateTranscript from "../utils/generateTranscript";
 import ModifiedRC4 from "../utils/ModifiedRC4";
@@ -7,6 +15,8 @@ import Keccak from "../utils/Keccak";
 import RSA from "../utils/RSA";
 
 function Database() {
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [data, setData] = useState([]);
   const [key, setKey] = useState("plaintext");
   const [expandedCell, setExpandedCell] = useState(null);
@@ -165,14 +175,38 @@ function Database() {
       const hasil = keccak.hash();
 
       if (hasil === row["DigitalSignature"]) {
-        alert("Trasncript valid!");
+        setSuccess("Transcript valid!");
       } else {
-        alert("Transcript isn't valid!");
+        setError("Transcript isn't valid!");
       }
     };
 
+    useEffect(() => {
+      // Check if error state has changed
+      if (error) {
+        const timeoutId = setTimeout(() => setError(""), 3000);
+
+        return () => clearTimeout(timeoutId);
+      }
+      if (success) {
+        const timeoutId = setTimeout(() => setSuccess(""), 3000);
+
+        return () => clearTimeout(timeoutId);
+      }
+    }, [error, success]);
+
     return (
       <div style={{ overflowX: "auto", maxWidth: "100%" }}>
+        {error && (
+          <Alert variant="danger" onClose={() => setError("")} dismissible>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success" onClose={() => setSuccess("")} dismissible>
+            {success}
+          </Alert>
+        )}
         <Table striped hover bordered>
           <thead>
             <tr>
