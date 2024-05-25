@@ -1,4 +1,6 @@
 import { jsPDF } from "jspdf";
+import CryptoJS from 'crypto-js'
+import { saveAs } from 'file-saver'
 
 export default function generateTranscript(data) {
   const doc = new jsPDF();
@@ -259,7 +261,17 @@ export default function generateTranscript(data) {
   );
 
   // Save PDF
-  doc.save("transkrip_" + data.identity.nim);
+  // doc.save("transkrip_" + data.identity.nim);
+  const pdfBase64 = doc.output('datauristring').split(',')[1];
+
+  // Encrypt the base64 string using AES
+  const encrypted = CryptoJS.AES.encrypt(pdfBase64, 'halohalo').toString();
+
+  // Create a Blob from the encrypted string
+  const encryptedBlob = new Blob([encrypted], { type: 'application/octet-stream' });
+
+  // Download the encrypted PDF file
+  saveAs(encryptedBlob, `transkrip_${data.identity.nim}.pdf`);
 }
 
 // Contoh penggunaan
