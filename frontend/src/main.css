@@ -19,6 +19,11 @@ body::-webkit-scrollbar {
   --navbar-color-text: #000000;
 }
 
+.navbar .nav-link.active {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
 .table {
   --bs-table-bg: "transparent";
   --bs-table-border-color: "#000"
@@ -66,6 +71,33 @@ body::-webkit-scrollbar {
 .header-box {
   margin-bottom: 20px;
 }
+
+/* customNavbar.css */
+.custom-navbar {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-link:hover {
+  color: #ffc107; /* Change color on hover */
+}
+
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    padding: 10px;
+    background-color: white !important;
+    border: #000;
+  }
+  .navbar-nav .nav-link {
+    color: black !important; /* Change color of links in collapsed navbar */
+  }
+
+  .navbar-nav .nav-link:hover {
+    color: #ffc107 !important; /* Change color of links on hover in collapsed navbar */
+  }
+}
+
 
 .separator {
   margin: 20px 0;
