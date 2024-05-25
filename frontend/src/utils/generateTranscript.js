@@ -276,7 +276,7 @@ export default function generateTranscript(data) {
   });
 
   // Download the encrypted PDF file
-  saveAs(encryptedBlob, `transkrip_${data.identity.nim}.pdf`);
+  saveAs(encryptedBlob, `transkrip_${data.identity.nim}_encrypted.pdf`);
 }
 
 // Contoh penggunaan

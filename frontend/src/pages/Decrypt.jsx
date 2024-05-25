@@ -23,7 +23,7 @@ function Decrypt() {
     const blob = new Blob([decryptedFile], {
       type: "application/octet-stream",
     });
-    saveAs(blob, fileName.replace(".encrypted", ".pdf"));
+    saveAs(blob, fileName.replace("_encrypted", ""));
   };
 
   return (
