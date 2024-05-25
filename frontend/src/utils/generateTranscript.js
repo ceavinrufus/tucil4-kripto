@@ -261,14 +261,23 @@ export default function generateTranscript(data) {
   );
 
   // Save PDF
-  // doc.save("transkrip_" + data.identity.nim);
   const pdfBase64 = doc.output('datauristring').split(',')[1];
+  
+  function wordArrayToUint8Array(wordArray) {
+    const byteArray = new Uint8Array(wordArray.sigBytes);
+    for (let i = 0; i < wordArray.sigBytes; i++) {
+      byteArray[i] = (wordArray.words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+    }
+    return byteArray;
+  }
 
   // Encrypt the base64 string using AES
-  const encrypted = CryptoJS.AES.encrypt(pdfBase64, 'halohalo').toString();
+  const wordArray = CryptoJS.lib.WordArray.create(pdfBase64);
+  const encrypted = CryptoJS.AES.encrypt(wordArray, "halohalo").ciphertext;
+  const encryptedArray = wordArrayToUint8Array(encrypted);
 
   // Create a Blob from the encrypted string
-  const encryptedBlob = new Blob([encrypted], { type: 'application/octet-stream' });
+  const encryptedBlob = new Blob([encryptedArray], { type: 'application/octet-stream' });
 
   // Download the encrypted PDF file
   saveAs(encryptedBlob, `transkrip_${data.identity.nim}.pdf`);
